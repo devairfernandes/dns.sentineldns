@@ -328,7 +328,7 @@
         </a>
 
         <div style="margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1.5rem; font-size: 0.8rem; color: #64748b;">
-            &copy; 2026 Unbound Sentinel. Todos os direitos reservados. | <a href="privacidade.html" style="color: #94a3b8; text-decoration: underline; transition: color 0.3s ease;">Política de Privacidade</a>
+            &copy; 2026 Unbound Sentinel. Todos os direitos reservados. | <a href="privacidade.html" style="color: #94a3b8; text-decoration: underline; transition: color 0.3s ease;">Política de Privacidade</a> | Visitas: <span id="visit-count" style="color: #38bdf8; font-weight: 600;">...</span>
         </div>
 
         <div class="glow-line"></div>
@@ -426,6 +426,19 @@
                 console.warn("Storage blocked:", e);
             }
             applyTranslations(savedLang);
+
+            // Fetch visitor count (read-only)
+            try {
+                fetch('https://api.counterapi.dev/v1/sentineldns/visits')
+                    .then(res => res.json())
+                    .then(data => {
+                        const el = document.getElementById('visit-count');
+                        if (el && data && data.value) {
+                            el.innerText = data.value;
+                        }
+                    })
+                    .catch(() => {});
+            } catch (e) {}
         });
     </script>
 </body>
