@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação Oficial - Sentinel DNS | Guias e Otimização</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Acesse a documentação técnica oficial do Sentinel DNS. Guias completos de instalação offline do Appliance Rocky Linux, dimensionamento de hardware, otimização do Proxmox e recursos de elite.">
+    <meta name="keywords" content="documentação sentinel dns, manual unbound sentinel, configurar proxmox dns, otimizar unbound, appliance dns, cti dns">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dns.sentineldns.uk/docs.html">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dns.sentineldns.uk/docs.html">
+    <meta property="og:title" content="Documentação Oficial - Sentinel DNS | Guias e Otimização">
+    <meta property="og:description" content="Guias técnicos, requisitos de hardware, otimizações de virtualização e passos de implantação offline para o Sentinel DNS.">
+    <meta property="og:image" content="https://dns.sentineldns.uk/banner-v2.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://dns.sentineldns.uk/docs.html">
+    <meta property="twitter:title" content="Documentação Oficial - Sentinel DNS | Guias e Otimização">
+    <meta property="twitter:description" content="Guias técnicos, requisitos de hardware, otimizações de virtualização e passos de implantação offline para o Sentinel DNS.">
+    <meta property="twitter:image" content="https://dns.sentineldns.uk/banner-v2.png">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Início",
+        "item": "https://dns.sentineldns.uk/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Documentação",
+        "item": "https://dns.sentineldns.uk/docs.html"
+      }]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "O que é o Sentinel DNS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "O Sentinel DNS é um servidor DNS recursivo seguro e de alta performance baseado no motor Unbound otimizado, com recursos avançados de bloqueio de ameaças em tempo real e administração centralizada."
+        }
+      },{
+        "@type": "Question",
+        "name": "Quais os requisitos de hardware do Sentinel DNS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Os requisitos mínimos são CPU com 2 vCores, 4 GB de RAM e 40 GB de SSD para redes de até 5.000 clientes. Redes maiores demandam até 16 Cores e 32 GB de RAM."
+        }
+      },{
+        "@type": "Question",
+        "name": "Como instalar o Sentinel DNS?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A instalação é realizada gravando a imagem ISO oficial em um dispositivo USB ou montando-a como drive em sua máquina virtual. O instalador automático iniciará no boot do servidor e configurará o sistema Rocky Linux com o Sentinel DNS de forma 100% autônoma."
+        }
+      },{
+        "@type": "Question",
+        "name": "Qual o melhor DNS recursivo local para provedores (ISPs) e empresas?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "O Unbound Sentinel é considerado o melhor DNS recursivo local por unir o motor Unbound pré-otimizado (Auto-Tuning de buffers, slabs e cache) com inteligência de ameaças em tempo real e persistência de cache para evitar lentidões após reinicializações."
+        }
+      }]
+    }
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        body { 
+            background: #020617; 
+            color: #f8fafc; 
+            font-family: 'Inter', system-ui, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .header h1 span {
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .nav-links a:hover {
+            color: #38bdf8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        h2 {
+            color: #38bdf8;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            padding-bottom: 0.5rem;
+            margin-top: 3rem;
+            font-size: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h3 {
+            color: #818cf8;
+            font-size: 1.25rem;
+            margin-top: 2rem;
+        }
+
+        p, li {
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.3rem;
+            font-family: monospace;
+            color: #38bdf8;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            background: rgba(56, 189, 248, 0.1);
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div style="position: fixed; top: 1.5rem; right: 1.5rem; z-index: 1000;">
+        <select id="lang-selector" style="padding: 6px 10px; background: rgba(15, 23, 42, 0.8); color: #f8fafc; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; outline: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.9rem; backdrop-filter: blur(10px);">
+            <option value="pt" style="background: #0f172a;">Português (BR)</option>
+            <option value="en" style="background: #0f172a;">English (US)</option>
+            <option value="es" style="background: #0f172a;">Español</option>
+        </select>
+    </div>
+
+    <div class="header">
+        <h1 data-i18n="doc.title">Documentação <span>Sentinel DNS</span></h1>
+        <div class="nav-links">
+            <a data-i18n="nav.home" href="index.html"><i data-lucide="home" width="16" height="16"></i> Início</a>
+            <a data-i18n="nav.install" href="download.html"><i data-lucide="download" width="16" height="16"></i> Instalação ISO</a>
+            <a data-i18n="nav.support" href="https://wa.me/5569992214709" target="_blank"><i data-lucide="message-circle" width="16" height="16"></i> Suporte Especializado</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <p>O <strong>Unbound Sentinel v2.6.0</strong> é distribuído como uma imagem ISO remasterizada e pronta para implantação em servidores físicos ou máquinas virtuais (VMware, Proxmox, Hyper-V). Ele elimina 100% a necessidade de configuração manual ou conexão com a internet durante a instalação do cliente.</p>
+
+        <h2><i data-lucide="server"></i> Appliance Sentinel (Rocky Linux 9.7)</h2>
+        <div class="card">
+            <ul>
+                <li><strong>Instalação 100% Offline (Unattended):</strong> O instalador automatizado via Kickstart (ks.cfg) configura particionamento, Unbound, Redis, Node.js e o painel Sentinel de forma autônoma.</li>
+                <li><strong>Dynamic ISP Auto-Tuning:</strong> Motor inteligente que mede CPU e RAM no boot, ajustando limites de cache (até 4GB) e buffers UDP do kernel (até 16MB) de acordo com o hardware.</li>
+                <li><strong>Hardening de Segurança:</strong> Serviço SSH padrão desativado e transferido para porta de alta tolerância contra força bruta, com regras de Firewalld ativas.</li>
+                <li><strong>Hyperlocal & DNSSEC de Fábrica:</strong> Validação criptográfica ativa e resolução local de servidores raiz em 0 milissegundos via zona raiz offline pré-carregada na ISO.</li>
+                <li><strong>Serve-Expired & Prefetch:</strong> Resiliência extrema. O Unbound renova domínios em background e continua servindo registros do cache por até 24h caso servidores mundiais sofram DDoS.</li>
+            </ul>
+        </div>
+
+        <h2><i data-lucide="star"></i> Recursos de Elite (PRO)</h2>
+        
+        <h3>Globo 3D Holográfico Inteligente</h3>
+        <ul>
+            <li><strong>Visualização Cyberpunk:</strong> Esfera translúcida com malha continental néon e efeito sonar.</li>
+            <li><strong>Arcos CTI:</strong> Arcos tridimensionais conectando os IPs dos clientes aos domínios das ameaças.</li>
+            <li><strong>Legenda Glassmorphism:</strong> Painel lateral com as últimas conexões e bandeiras de países.</li>
+        </ul>
+
+        <h3>Cyber Threat Intelligence & DNSSEC Guard</h3>
+        <ul>
+            <li><strong>Background Threat Parser:</strong> Processa até 20.000 linhas de logs operando com sub-milissegundos de latência.</li>
+            <li><strong>Detecção de Malware:</strong> Cruzamento instantâneo com bases de inteligência contra mais de 70 motores antivírus simultaneamente.</li>
+            <li><strong>Zero Loopback Noise:</strong> Filtro avançado que remove 100% dos ruídos locais nos gráficos e mapas.</li>
+        </ul>
+
+        <h3>NOC Telemetry & GeoIP</h3>
+        <ul>
+            <li><strong>NOC Telemetry Elite:</strong> Diagnóstico multi-alvo com gráficos Sparklines Néon para métricas de Perda de Pacotes, Jitter e Latência.</li>
+            <li><strong>GeoIP Integrado:</strong> Suporte a bancos locais offline do MaxMind com download em 1 clique via painel.</li>
+            <li><strong>Modo TV (NOC View):</strong> Interface otimizada sem rolagem para telões e monitoramento corporativo.</li>
+        </ul>
+
+        <h2><i data-lucide="cpu"></i> Dimensionamento (Hardware)</h2>
+        <p>O Sentinel aproveita ao máximo os recursos disponíveis graças ao mecanismo nativo de Auto-Tuning. O hardware recomendado varia conforme o tamanho da rede:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Perfil de Rede</th>
+                    <th>Clientes Ativos</th>
+                    <th>CPU</th>
+                    <th>Memória RAM</th>
+                    <th>Armazenamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Pequeno (Rede Local)</td>
+                    <td>Até 5.000</td>
+                    <td>2 a 4 vCPUs</td>
+                    <td>4 GB a 8 GB</td>
+                    <td>30 GB SSD</td>
+                </tr>
+                <tr>
+                    <td>Médio (ISP)</td>
+                    <td>5.000 a 20.000</td>
+                    <td>4 a 8 Cores</td>
+                    <td>8 GB a 16 GB</td>
+                    <td>60 GB NVMe</td>
+                </tr>
+                <tr>
+                    <td>Elite (Alto Tráfego)</td>
+                    <td>Acima de 20.000</td>
+                    <td>8 a 16 Cores</td>
+                    <td>16 GB a 32 GB</td>
+                    <td>100 GB NVMe Enterprise</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Recomendações de Otimização (Virtualização)</h3>
+        <ul>
+            <li><strong>Proxmox/KVM:</strong> Configure a CPU como <code>host</code> em vez de <code>kvm64</code> para acelerar cálculos do DNSSEC.</li>
+            <li><strong>Placa de Rede:</strong> Utilize sempre a interface <code>VirtIO</code> para eliminar latências UDP.</li>
+            <li><strong>Clock:</strong> Para DNS recursivo de alta concorrência, o clock do núcleo (GHz) importa mais que a quantidade.</li>
+        </ul>
+
+
+
+        <h2><i data-lucide="arrow-right-left"></i> Sentinel DNS vs Soluções Manuais (Unbound + Pi-hole)</h2>
+        <div class="card">
+            <p>Muitos administradores de rede tentam obter a performance e a segurança ideais combinando manualmente o <strong>Unbound DNS</strong> com filtros de rede como o <strong>Pi-hole</strong> ou <strong>AdGuard Home</strong>. Veja um comparativo de por que o <strong>Appliance Sentinel DNS</strong> é o melhor resolvedor DNS recursivo local pronto para o seu provedor de internet ou rede corporativa:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Recurso</th>
+                        <th>Instalação Manual (Unbound + Pi-hole)</th>
+                        <th>Appliance Sentinel DNS (ISO Rocky Linux)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Instalação</strong></td>
+                        <td>Manual, requer digitação de dezenas de comandos no terminal e dependência de repositórios online no cliente.</td>
+                        <td><span class="badge">100% Offline e Automática</span> via ISO Appliance Kickstart em apenas 5 minutos.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Auto-Tuning</strong></td>
+                        <td>Exige cálculo manual e complexo de Slabs, Threads e buffers de cache no arquivo de configuração do Unbound.</td>
+                        <td><span class="badge">Dynamic Auto-Tuning</span> que mede a CPU e RAM no boot e ajusta os limites do cache e buffers UDP do kernel.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Resiliência de Rede</strong></td>
+                        <td>Instável se não configurado com tags de expiração avançadas. Sem renovação preditiva automatizada.</td>
+                        <td><span class="badge">Serve-Expired e Prefetch</span> ativos por padrão. Mantém o cache por até 24h em quedas globais do DNS.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Persistência de Cache</strong></td>
+                        <td>Reinicializações do servidor limpam a memória RAM, causando lentidão de navegação temporária na rede.</td>
+                        <td><span class="badge">Persistent Cache</span> que salva o cache em disco ao reiniciar e o recarrega na RAM instantaneamente no boot.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Telemetria NOC</strong></td>
+                        <td>Gráficos simples. Exige instalação de ferramentas extras para telemetria de latência, jitter e perda de pacotes.</td>
+                        <td><span class="badge">CTI Holographic 3D Globe</span> e Sparklines de latência integrados nativamente no dashboard.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2><i data-lucide="crown"></i> Comparativo de Planos</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Recurso</th>
+                    <th>Versão FREE</th>
+                    <th>Versão PRO / Enterprise</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Gráficos de Tráfego e DNS</td>
+                    <td><span class="badge">Sim</span></td>
+                    <td><span class="badge">Sim</span></td>
+                </tr>
+                <tr>
+                    <td>Globo 3D Holográfico</td>
+                    <td>❌ Não</td>
+                    <td><span class="badge">Sim</span></td>
+                </tr>
+                <tr>
+                    <td>NOC Telemetry Elite (Ping)</td>
+                    <td>❌ Não</td>
+                    <td><span class="badge">Sim (Ilimitado)</span></td>
+                </tr>
+                <tr>
+                    <td>Updates OTA em 1 Clique</td>
+                    <td>❌ Não</td>
+                    <td><span class="badge">Sim</span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p style="text-align: center; margin-top: 4rem; color: #64748b; font-size: 0.9rem;">&copy; 2026 Unbound Sentinel &mdash; Engenharia Avançada e Inteligência DNS. | <a href="privacidade.html" style="color: #94a3b8; text-decoration: underline; transition: color 0.3s ease;">Política de Privacidade</a></p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Comprehensive inlined translation dictionary to completely bypass CDN caching issues
+        const translations = {
+            "pt": {
+                "nav.home": "<i data-lucide=\"home\" width=\"16\" height=\"16\"></i> Início",
+                "doc.title": "Documentação <span>Sentinel DNS</span>",
+                "nav.install": "<i data-lucide=\"download\" width=\"16\" height=\"16\"></i> Instalação ISO",
+                "nav.support": "<i data-lucide=\"message-circle\" width=\"16\" height=\"16\"></i> Suporte Especializado"
+            },
+            "en": {
+                "nav.home": "<i data-lucide=\"home\" width=\"16\" height=\"16\"></i> Home",
+                "doc.title": "Sentinel DNS <span>Documentation</span>",
+                "nav.install": "<i data-lucide=\"download\" width=\"16\" height=\"16\"></i> ISO Installation",
+                "nav.support": "<i data-lucide=\"message-circle\" width=\"16\" height=\"16\"></i> Expert Support"
+            },
+            "es": {
+                "nav.home": "<i data-lucide=\"home\" width=\"16\" height=\"16\"></i> Inicio",
+                "doc.title": "Documentación <span>Sentinel DNS</span>",
+                "nav.install": "<i data-lucide=\"download\" width=\"16\" height=\"16\"></i> Instalación ISO",
+                "nav.support": "<i data-lucide=\"message-circle\" width=\"16\" height=\"16\"></i> Soporte Especializado"
+            }
+        };
+
+        function setLanguage(lang) {
+            try {
+                localStorage.setItem('landing_lang', lang);
+            } catch (e) {
+                console.warn("Storage blocked:", e);
+            }
+            applyTranslations(lang);
+        }
+
+        function applyTranslations(lang) {
+            const t = translations[lang] || translations['pt'];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) {
+                    el.innerHTML = t[key];
+                }
+            });
+            
+            const select = document.getElementById('lang-selector');
+            if (select) select.value = lang;
+            
+            if (window.lucide && window.lucide.createIcons) {
+                window.lucide.createIcons();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const select = document.getElementById('lang-selector');
+            if (select) {
+                select.addEventListener('change', (e) => {
+                    setLanguage(e.target.value);
+                });
+            }
+            let savedLang = 'pt';
+            try {
+                savedLang = localStorage.getItem('landing_lang') || 'pt';
+            } catch (e) {
+                console.warn("Storage blocked:", e);
+            }
+            applyTranslations(savedLang);
+        });
+    </script>
+</body>
+</html>
