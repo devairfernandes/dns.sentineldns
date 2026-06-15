@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nó Mestre - Sentinel DNS | Servidor DNS Seguro e Filtro Anti-Malware</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Sentinel DNS é uma solução corporativa de servidor DNS recursivo seguro com motor Unbound otimizado. Bloqueio anti-malware em tempo real, baixa latência e telemetria CTI integrada.">
@@ -637,8 +638,8 @@
                     .then(res => res.json())
                     .then(data => {
                         const el = document.getElementById('visit-count');
-                        if (el && data && data.value) {
-                            el.innerText = data.value;
+                        if (el && data && data.count) {
+                            el.innerText = data.count;
                         }
                     })
                     .catch(() => {});

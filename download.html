@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Download ISO - Sentinel DNS | Instalação e Requisitos do Sistema</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Baixe a imagem ISO oficial do Sentinel DNS v2.6.0. Instalação offline automatizada, auto-tuning de hardware e máxima proteção para provedores e redes corporativas.">
@@ -429,12 +430,12 @@
 
             // Fetch visitor count (read-only)
             try {
-                fetch('https://api.counterapi.dev/v1/sentineldns/visits')
+                fetch('https://api.counterapi.dev/v1/sentineldns/visits/')
                     .then(res => res.json())
                     .then(data => {
                         const el = document.getElementById('visit-count');
-                        if (el && data && data.value) {
-                            el.innerText = data.value;
+                        if (el && data && data.count) {
+                            el.innerText = data.count;
                         }
                     })
                     .catch(() => {});

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentação Oficial - Sentinel DNS | Guias e Otimização</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Acesse a documentação técnica oficial do Sentinel DNS. Guias completos de instalação offline do Appliance Rocky Linux, dimensionamento de hardware, otimização do Proxmox e recursos de elite.">
@@ -483,12 +484,12 @@
 
             // Fetch visitor count (read-only)
             try {
-                fetch('https://api.counterapi.dev/v1/sentineldns/visits')
+                fetch('https://api.counterapi.dev/v1/sentineldns/visits/')
                     .then(res => res.json())
                     .then(data => {
                         const el = document.getElementById('visit-count');
-                        if (el && data && data.value) {
-                            el.innerText = data.value;
+                        if (el && data && data.count) {
+                            el.innerText = data.count;
                         }
                     })
                     .catch(() => {});
