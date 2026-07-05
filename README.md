@@ -1,99 +1,151 @@
-# 🛡️ Unbound Sentinel
+# 🛡️ Sentinel DNS — DNS Firewall Appliance para ISPs
 
-![Sentinel Banner](banner-v2.png)
+<div align="center">
 
-**Appliance de DNS Recursivo & Plataforma CTI/NOC Telemetry**
+[![Website](https://img.shields.io/badge/Site%20Oficial-dns.sentineldns.uk-38bdf8?style=for-the-badge&logo=globe&logoColor=white)](https://dns.sentineldns.uk)
+[![License](https://img.shields.io/badge/Licença-Proprietária-818cf8?style=for-the-badge)](https://dns.sentineldns.uk/privacidade.html)
+[![Rocky Linux](https://img.shields.io/badge/Rocky%20Linux-9.7-10b981?style=for-the-badge&logo=rockylinux&logoColor=white)](https://rockylinux.org)
+[![Unbound](https://img.shields.io/badge/Unbound-2.9.31-38bdf8?style=for-the-badge)](https://nlnetlabs.nl/projects/unbound/)
+[![DNSSEC](https://img.shields.io/badge/DNSSEC-Ativo-10b981?style=for-the-badge&logo=shield&logoColor=white)](https://dns.sentineldns.uk/docs.html)
 
-Unbound Sentinel é um appliance de alto desempenho e segurança baseado em **Rocky Linux 9.7 Minimal**, projetado para automatizar e otimizar a implantação de servidores DNS recursivos em provedores de internet (ISPs), operadoras e infraestruturas corporativas críticas.
+**DNS Firewall Recursivo de Alto Desempenho para Provedores de Internet (ISPs) e Redes Corporativas**
 
-O projeto é distribuído exclusivamente como um **Appliance Autoinstalável (ISO Remasterizada)**, pronto para produção em menos de 5 minutos, operando 100% em modo offline (sem necessidade de conexão externa durante a instalação).
+[📥 Baixar ISO](https://dns.sentineldns.uk/download.html) • [📖 Documentação](https://dns.sentineldns.uk/docs.html) • [🌐 Site Oficial](https://dns.sentineldns.uk) • [📧 Suporte](mailto:dnssentinel@sentineldns.uk)
 
-👉 **[Acesse o Site Oficial para Baixar a ISO](https://dns.sentineldns.uk/)**
+![Sentinel DNS Banner](https://dns.sentineldns.uk/banner-v2.webp)
 
----
-
-## 💿 Recursos Nativos do Appliance
-
-*   **Instalação 100% Autônoma (Unattended Kickstart)**: O instalador via Kickstart (`ks.cfg`) automatiza o particionamento de disco LVM (com isolamento de logs), a instalação das dependências (Node.js, Redis, Unbound) e inicialização do painel Sentinel sem qualquer intervenção humana.
-*   **Dynamic OS & Services Auto-Tuning**: Um script inteligente monitora o hardware físico (processador e memória RAM) a cada boot e ajusta:
-    *   **Buffers UDP do Kernel Linux** (`rmem_max` e `rmem_default`) para até **16MB** para evitar perdas de pacotes UDP.
-    *   **Slabs de Cache (Potência de 2)** correspondentes ao número de núcleos de CPU para evitar travas em memória.
-    *   **Limites de Cache** dinamicamente escalados até 4GB de RAM.
-*   **RFC 8767 (Serve-Expired) & Prefetch**: Resiliência extrema. Renova domínios quentes automaticamente em background. Caso os servidores mundiais estejam indisponíveis, o Sentinel continua respondendo com registros expirados do cache por até **24 horas**.
-*   **RFC 7706 (Hyperlocal)**: Resolução de servidores raiz em **0 milissegundos** rodando uma zona raiz local offline de forma segura.
-*   **DNSSEC Ativo de Fábrica**: Validação criptográfica de ponta a ponta ativa por padrão.
-*   **Persistência de Cache Quente**: Mapeamento dinâmico que grava o cache em disco no shutdown e restaura para a RAM no startup, evitando lentidão pós-reboots.
-*   **Hardening de Segurança**: Porta SSH customizada por padrão, bloqueio de porta 22 e regras de firewall agressivas pré-configuradas.
+</div>
 
 ---
 
-## 📊 O Painel de Controle Sentinel
+## O que é o Sentinel DNS?
 
-A ISO inclui uma interface web premium para monitoramento em tempo real:
-*   **Globo 3D Holográfico (Three.js)**: Exibe arcos tridimensionais geolocalizados em tempo real conectando as ameaças locais de seus clientes aos destinos mundiais.
-*   **Threat Parser (CTI)**: Motor assíncrono que processa logs de queries do Unbound filtrando logs de DNSSEC inválidos (*Bogus*) e malware.
-*   **NOC Telemetry Elite (Ping Master)**: Gráficos de área néon reativos medindo perda de pacotes, jitter de rede e latências médias via ICMP/TCP.
-*   **Gestão de Configuração DNS**: Editor visual seguro integrado para gerenciar zonas estáticas e arquivos de controle do Unbound.
+O **Sentinel DNS** é um appliance de DNS Firewall open-source baseado em **Rocky Linux 9.7**, distribuído como uma **ISO autoinstalável** pronta para produção em menos de 5 minutos.
 
-| Painel Principal | Globo 3D de Tráfego CTI |
-|:---:|:---:|
-| ![Dashboard](screen1-real.png) | ![Globe](screen2-real.png) |
+Projetado especificamente para **Provedores de Internet (ISPs)**, operadoras de telecom e redes corporativas críticas que precisam de:
 
----
-
-## 💻 Dimensionamento Recomendado
-
-| Perfil de Rede | Clientes Ativos | Processador (CPU) | Memória RAM | Disco (SSD/NVMe) |
-| :--- | :---: | :---: | :---: | :---: |
-| **Pequeno (Rede Local / PME)** | Até 5.000 | 2 a 4 vCPUs | 4 GB a 8 GB | 30 GB SSD |
-| **Médio (Provedor Médio / ISP)** | 5.000 a 20.000 | 4 a 8 Cores (Físicos) | 8 GB a 16 GB | 60 GB NVMe |
-| **Elite (Alto Tráfego)** | Acima de 20.000 | 8 a 16 Cores (Físicos) | 16 GB a 32 GB | 100 GB Enterprise |
+- ✅ Resolução DNS de alta performance com **auto-tuning de hardware**
+- ✅ Bloqueio de malware e phishing em **tempo real via CTI feeds**
+- ✅ Dashboard NOC com **Globo 3D holográfico** de ameaças geolocalizadas
+- ✅ Instalação **100% offline e automatizada** (zero configuração manual)
+- ✅ Conformidade judicial **ANATEL** com o módulo AnaBlock
 
 ---
 
-## 📞 Licenciamento, Suporte e Parcerias
+## 📸 Screenshots
 
-O Unbound Sentinel é uma solução proprietária/comercial. Oferecemos suporte premium e consultoria avançada em engenharia de DNS recursivo.
+<div align="center">
 
-Para adquirir licenças corporativas ou suporte de integração:
-*   **Site Oficial:** [dns.sentineldns.uk](https://dns.sentineldns.uk/)
-*   **Contato Oficial:** [Conversar via WhatsApp com a Equipe Sentinel](https://wa.me/5569992214709)
+| Dashboard NOC Master | Tráfego Global em Tempo Real |
+|---|---|
+| ![Dashboard](https://dns.sentineldns.uk/screen1-real.webp) | ![Tráfego](https://dns.sentineldns.uk/screen2-real.webp) |
 
----
-
-# 🛡️ Unbound Sentinel (English)
-
-**Recursive DNS Appliance & CTI/NOC Telemetry Platform**
-
-Unbound Sentinel is a high-performance, secure DNS recursion appliance based on **Rocky Linux 9.7 Minimal**, designed to automate and optimize DNS resolution in Internet Service Providers (ISPs), telecom operators, and critical corporate networks.
-
-The project is distributed as a **Self-Installing ISO Image (Remastered Appliance)**, ready for production in under 5 minutes, operating 100% offline (no external internet required during installation).
-
-👉 **[Go to Official Website to Download the ISO](https://dns.sentineldns.uk/)**
+</div>
 
 ---
 
-## 💿 Appliance Features
+## 💿 Recursos do Appliance
 
-*   **100% Unattended Installation (Kickstart)**: Automatically partitions disks (LVM with log isolation), installs dependencies (Node.js, Redis, Unbound), and configures the dashboard with zero human intervention.
-*   **Dynamic OS & Services Auto-Tuning**: A startup script calculates system memory/CPU cores and configures:
-    *   **Linux Kernel UDP Buffers** up to **16MB** (`rmem_max` and `rmem_default`) to prevent UDP packet loss.
-    *   **Cache Slabs (Power of 2)** mapped to CPU cores for lock-less memory access.
-    *   **Cache Limits** dynamically scaled up to 4GB RAM.
-*   **RFC 8767 (Serve-Expired) & Prefetch**: Extreme uptime. Automatically prefetches popular domains. If authoritative root servers go offline or suffer DDoS attacks, Sentinel serves cached records for up to **24 hours**.
-*   **RFC 7706 (Hyperlocal)**: Offline local root servers resolution in **0 milliseconds**.
-*   **Out-of-the-box DNSSEC**: End-to-end cryptographic signatures validation active by default.
-*   **Persistent Cache**: Systemd hooks to dump RAM cache to disk on shutdown and reload it on startup, eliminating slow query performance after rebooting.
+### Instalação e Deploy
+- **Kickstart Unattended (ks.cfg)** — Particiona disco LVM, instala Node.js, Redis e Unbound, inicia o painel sem qualquer intervenção humana
+- **100% Offline** — Não requer internet durante a instalação do cliente
+- **Pronto para produção em < 5 minutos**
+
+### Performance e Otimização
+- **Dynamic Auto-Tuning** — Script de boot que mede CPU e RAM e configura automaticamente:
+  - Buffers UDP do Kernel (`rmem_max`, `rmem_default`) até **16 MB**
+  - Slabs de Cache mapeados em potência de 2 por núcleo de CPU
+  - Limites de cache escalados dinamicamente até **4 GB de RAM**
+- **RFC 8198 (Prefetch)** — Renova registros populares em background
+- **RFC 8767 (Serve-Expired)** — Serve cache por até **24h** durante instabilidade mundial
+
+### Segurança
+- **DNSSEC de fábrica** — Validação criptográfica ativa por padrão com âncora raiz
+- **RFC 7706 (Hyperlocal)** — Resolução de root servers em **0 ms** via zona raiz offline
+- **Hardening SSH** — Porta SSH customizada + regras Firewalld agressivas pré-configuradas
+- **Cyber Threat Intelligence (CTI)** — Motor assíncrono processa até 20.000 linhas de logs por execução
+- **DGA Zero-Day Block** — Detecção e bloqueio de domínios gerados algoritmicamente
+
+### Dashboard NOC
+- **Globo 3D Holográfico (Three.js)** — Arcos geolocalizados em tempo real conectando clientes às ameaças
+- **Gráficos Telemetria ICMP/TCP** — Latência, jitter e perda de pacotes em tempo real
+- **AnaBlock** — Sincronização automática de bloqueios judiciais ANATEL
+- **Cache Persistente** — Dump para disco no shutdown, restore na RAM no startup
 
 ---
 
-## 📞 Licensing and Commercial Support
+## 📋 Requisitos de Hardware
 
-Unbound Sentinel is proprietary software. We offer premium corporate support and DNS resolution consultancy.
-
-*   **Official Website:** [dns.sentineldns.uk](https://dns.sentineldns.uk/)
-*   **WhatsApp Support:** [Contact Sentinel Team](https://wa.me/5569992214709)
+| Porte | Clientes | CPU | RAM | Armazenamento |
+|---|---|---|---|---|
+| Pequeno | até 5.000 | 2–4 vCPUs | 4 GB | 30 GB SSD |
+| Médio | 5k–20k | 4–8 Cores | 8–16 GB | 60 GB NVMe |
+| Grande | 20k+ | 16+ Cores | 32+ GB | 120 GB NVMe |
 
 ---
 
-*© 2026 Unbound Sentinel — Advanced Engineering and DNS Intelligence.*
+## 🚀 Início Rápido
+
+```bash
+# 1. Baixe a ISO no site oficial
+# https://dns.sentineldns.uk/download.html
+
+# 2. Grave em mídia bootável (Linux)
+dd if=sentinel-dns.iso of=/dev/sdX bs=4M status=progress
+
+# 3. Boot no servidor → instalação automática em < 5 minutos
+
+# 4. Acesse o painel
+http://SEU_IP:3000
+```
+
+---
+
+## 📁 Estrutura do Repositório
+
+```
+dns.sentineldns/
+├── index.html          ← Landing Page principal
+├── docs.html           ← Documentação técnica completa
+├── download.html       ← Página de download da ISO
+├── privacidade.html    ← Política de Privacidade (LGPD)
+├── sitemap.xml         ← Sitemap para indexação
+├── robots.txt          ← Diretivas para crawlers
+└── banner-v2.webp      ← Banner oficial do projeto
+```
+
+---
+
+## 🔗 Links
+
+| Recurso | Link |
+|---|---|
+| 🌐 Site Oficial | [dns.sentineldns.uk](https://dns.sentineldns.uk) |
+| 📥 Download ISO | [dns.sentineldns.uk/download.html](https://dns.sentineldns.uk/download.html) |
+| 📖 Documentação | [dns.sentineldns.uk/docs.html](https://dns.sentineldns.uk/docs.html) |
+| 📧 Suporte | [dnssentinel@sentineldns.uk](mailto:dnssentinel@sentineldns.uk) |
+
+---
+
+## 🌎 English Summary
+
+**Sentinel DNS** is a self-deploying DNS Firewall Appliance based on Rocky Linux 9.7, purpose-built for Internet Service Providers (ISPs) and corporate networks.
+
+Distributed as a remastered ISO with unattended Kickstart installation, it features:
+- Unbound recursive resolver with automatic hardware auto-tuning
+- Real-time Cyber Threat Intelligence (CTI) blocking
+- DNSSEC, RFC 8767 (Serve-Expired) and RFC 7706 (Hyperlocal) out of the box
+- 3D Holographic Globe NOC Dashboard powered by Three.js
+- Judicial DNS blocking (ANATEL compliance) via AnaBlock module
+
+👉 [Official Website](https://dns.sentineldns.uk) | [Download ISO](https://dns.sentineldns.uk/download.html)
+
+---
+
+<div align="center">
+
+© 2026 Sentinel DNS — Advanced Engineering and DNS Intelligence
+
+**[dns.sentineldns.uk](https://dns.sentineldns.uk)**
+
+</div>
